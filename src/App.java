@@ -33,7 +33,7 @@ public class App {
 			if (!checkoutDate.after(checkinDate)) {
 				System.out.println("Error in reservation: The check-out date must be after the check-in date");
 			} else if(checkinDate.before(dateNow)) {
-				System.out.println("Error in reservation: The check-in date must be a future date");
+				System.out.println("Error in reservation: The check-in date must be a future date.");
 			} else {
 				reservation.updateDates(checkinDate, checkoutDate);
 				System.out.println(reservation.toString());

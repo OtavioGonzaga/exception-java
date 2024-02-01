@@ -1,26 +1,23 @@
 import java.text.ParseException;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import model.entities.Reservation;
+import model.exceptions.DomainException;
 
 public class App {
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 
-		System.out.print("Room number: ");
-		int roomNum = scanner.nextInt();
-		System.out.print("Check-in date (dd/MM/yyyy): ");
-		Date checkinDate = Reservation.DATE_FORMAT.parse(scanner.next());
-		System.out.print("Check-out date (dd/MM/yyyy): ");
-		Date checkoutDate = Reservation.DATE_FORMAT.parse(scanner.next());
+		try {
+			System.out.print("Room number: ");
+			int roomNum = scanner.nextInt();
+			System.out.print("Check-in date (dd/MM/yyyy): ");
+			Date checkinDate = Reservation.DATE_FORMAT.parse(scanner.next());
+			System.out.print("Check-out date (dd/MM/yyyy): ");
+			Date checkoutDate = Reservation.DATE_FORMAT.parse(scanner.next());
 
-		Date dateNow = new Date();
-		if (!checkoutDate.after(checkinDate)) {
-			System.out.println("Error in reservation: The check-out date must be after the check-in date");
-		} else if(checkinDate.before(dateNow)) {
-			System.out.println("Error in reservation: The check-in date must be a future date");
-		} else {
 			Reservation reservation = new Reservation(roomNum, checkinDate, checkoutDate);
 			System.out.println(reservation.toString());
 
@@ -29,10 +26,19 @@ public class App {
 			checkinDate = Reservation.DATE_FORMAT.parse(scanner.next());
 			System.out.print("Check-out date (dd/MM/yyyy): ");
 			checkoutDate = Reservation.DATE_FORMAT.parse(scanner.next());
-			
-			System.out.println(reservation.updateDates(checkinDate, checkoutDate));
-		}
 
-		scanner.close();
+			reservation.updateDates(checkinDate, checkoutDate);
+			System.out.println(reservation.toString());
+		} catch (ParseException e) {
+			System.out.println("Invalid date format");
+		} catch (DomainException e) {
+			System.out.println(e.getMessage());
+		} catch (InputMismatchException e) {
+			System.out.println("Invalid type of input");
+		} catch (RuntimeException e) {
+			System.out.println("Unxpected exception");
+	 	} finally {
+			scanner.close();
+		}
 	}
 }
